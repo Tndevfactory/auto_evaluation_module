@@ -8,7 +8,7 @@ import {
   Navigate,
   useLocation,
 } from "react-router-dom";
-import enFR from 'antd/lib/locale/fr_FR';
+import enFR from "antd/lib/locale/fr_FR";
 // ltr rtl
 import { ConfigProvider } from "antd";
 // translator
@@ -42,8 +42,18 @@ import Cautions from "./pages/finance/caution-modules/Cautions";
 // Project
 import Projects from "./pages/project/project-modules/Projects";
 import Kanban from "./pages/project/project-modules/kanban/Kanban";
-//Timesheet
 import Timesheet from "./pages/project/timesheet-modules/Timesheet";
+
+// evaluations
+import Themes from "./pages/evaluations/themes-modules/Themes";
+import Questions from "./pages/evaluations/questions-modules/Questions";
+import Evaluations from "./pages/evaluations/evaluations-modules/Evaluations";
+
+// userInterfaceEvaluation
+import UserInterfaceEvaluationFormulaire from "./pages/evaluations/user-evaluations-modules/UserInterfaceEvaluationFormulaire";
+import EvaluationSavedSuccess from "./pages/evaluations/user-evaluations-modules/EvaluationSavedSuccess";
+import UserInterfaceEvaluation from "./pages/evaluations/user-evaluations-modules/UserInterfaceEvaluation";
+
 //flottes
 import FlottesContract from "./pages/flottes/contracts-modules/Contracts";
 import FlottesClients from "./pages/flottes/clients-modules/Clients";
@@ -67,7 +77,7 @@ const App: React.FunctionComponent<IApplicationProps> = (props) => {
   };
 
   return (
-    <ConfigProvider direction="ltr" locale={enFR} >
+    <ConfigProvider direction="ltr" locale={enFR}>
       <IntlProvider
         messages={messages["fr"]}
         locale={"fr"}
@@ -75,6 +85,14 @@ const App: React.FunctionComponent<IApplicationProps> = (props) => {
       >
         <BrowserRouter>
           <Routes>
+            <Route
+              path="user-interface-evaluation/:annee"
+              element={<UserInterfaceEvaluationFormulaire />}
+            />
+            <Route
+              path="evaluation-saved-with-success"
+              element={<EvaluationSavedSuccess />}
+            />
             <Route path={`/*`} element={<Layout />}>
               <Route element={<GuestPath />}>
                 <Route path={`*`} element={<Login />} />
@@ -82,25 +100,46 @@ const App: React.FunctionComponent<IApplicationProps> = (props) => {
               <Route element={<RequireAuth allowedRoles={[ROLES.ADMIN]} />}>
                 {/* <Route path={`home`} element={<Home />} /> */}
               </Route>
-              <Route path={`home/*`} element={<Home />}>
-              </Route>
+              <Route path={`home/*`} element={<Home />}></Route>
               <Route path={`finance/*`} element={<Index />}>
-                  <Route path={`*`} element={<Cautions />} />
+                <Route path={`*`} element={<Cautions />} />
               </Route>
               <Route path={`flottes/*`} element={<Index />}>
-                  <Route path={`*`} element={<FlottesContract />} />
-                  <Route path={`gestion-des-contrat`} element={<FlottesContract />} />
-                  <Route path={`gestion-des-clients`} element={<FlottesClients />} />
-                  <Route path={`gestion-des-vehicules`} element={<Vehicules />} />
-                  <Route path={`gestion-des-livraisons`} element={<Livraison />} />
-
+                <Route path={`*`} element={<FlottesContract />} />
+                <Route
+                  path={`gestion-des-contrat`}
+                  element={<FlottesContract />}
+                />
+                <Route
+                  path={`gestion-des-clients`}
+                  element={<FlottesClients />}
+                />
+                <Route path={`gestion-des-vehicules`} element={<Vehicules />} />
+                <Route
+                  path={`gestion-des-livraisons`}
+                  element={<Livraison />}
+                />
               </Route>
               <Route path={`projects/*`} element={<Index />}>
-                  <Route path={`*`} element={<Projects />} />
-                  <Route path={`kanban`} element={<Kanban />} />
-                  <Route path={`timesheet`} element={<Timesheet />} />
+                <Route path={`*`} element={<Projects />} />
+                <Route path={`kanban`} element={<Kanban />} />
+                <Route path={`timesheet`} element={<Timesheet />} />
               </Route>
+
+              <Route path={`evaluations/*`} element={<Index />}>
+                <Route path={`*`} element={<Themes />} />
+                <Route path={`gestion_des_themes`} element={<Themes />} />
+                <Route path={`gestion_des_questions`} element={<Questions />} />
+                <Route
+                  path={`gestion_des_evaluations`}
+                  element={<Evaluations />}
+                />
+                <Route
+                  path={`user_evaluations`}
+                  element={<UserInterfaceEvaluation />}
+                />
               </Route>
+            </Route>
             <Route path={`unauthorized`} element={<Unauthorized />} />
             {/* <Route path={`*`} element={<Missing />} /> */}
           </Routes>

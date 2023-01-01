@@ -1,14 +1,7 @@
 import React, { useState } from "react";
 import elasticLogo from "../assets/elastic-logo.png";
 import { NavLink } from "react-router-dom";
-import {
-  Layout,
-  Menu,
-  Card,
-  Typography,
-  Grid,
-  Image,
-} from "antd";
+import { Layout, Menu, Card, Typography, Grid, Image } from "antd";
 import { useSelector } from "react-redux";
 import { useEffect } from "react";
 import MenuIcon from "./MenuIcon";
@@ -20,8 +13,6 @@ export default function Hsider() {
   const { isCollapsed, menu, selectedModule } = useSelector(
     (store: any) => store.ui
   );
-
-
 
   const screens = useBreakpoint();
   /* console.log(screens.lg); */
@@ -37,12 +28,12 @@ export default function Hsider() {
   const { Title, Text, Link } = Typography;
 
   //Hsider handle selected item
-  const [current, setCurrent] = useState('0')
-  useEffect(()=>{
-    window.addEventListener('storage', () => {
-      setCurrent('0')
-    })
-  },[current])
+  const [current, setCurrent] = useState("0");
+  useEffect(() => {
+    window.addEventListener("storage", () => {
+      setCurrent("0");
+    });
+  }, [current]);
   return (
     <Sider
       className="bg-white text-gray-500 shadow"
@@ -72,15 +63,48 @@ export default function Hsider() {
         selectedKeys={[current]}
         defaultOpenKeys={["0"]}
       >
-        {menu.filter((item)=>item.id===parseInt(localStorage.getItem("module")))[0]?.child_recursive.map((item,index) =>
-          item.child_recursive.length === 0 ? (
-            <Menu.Item key={index}  icon={<div><MenuIcon icon={item.icon}/></div>} onClick={()=>setCurrent(index.toString())}><NavLink to={item.link}>{item.designation_fr}</NavLink></Menu.Item>
-          ) : (
-            <Menu.SubMenu key={index}  title={item.designation_fr} icon={<div><MenuIcon icon={item.icon} /></div>} >
-              {item.child_recursive.map((item,y) =><Menu.Item key={index+"-"+y}  onClick={()=>setCurrent(index.toString()+"-"+y.toString())}>{item.designation_fr}</Menu.Item>)}
-            </Menu.SubMenu>
-          )
-        )}
+        {menu
+          .filter(
+            (item) => item.id === parseInt(localStorage.getItem("module"))
+          )[0]
+          ?.child_recursive.map((item, index) =>
+            item.child_recursive.length === 0 ? (
+              <Menu.Item
+                key={index}
+                icon={
+                  <div>
+                    <MenuIcon icon={item.icon} />
+                  </div>
+                }
+                onClick={() => setCurrent(index.toString())}
+              >
+                <NavLink to={item.link}>{item.designation_fr}</NavLink>
+              </Menu.Item>
+            ) : (
+              <Menu.SubMenu
+                key={index}
+                title={item.designation_fr}
+                icon={
+                  <div>
+                    <MenuIcon icon={item.icon} />
+                  </div>
+                }
+              >
+                {item.child_recursive.map((item, y) => (
+                  <Menu.Item
+                    key={index + "-" + y}
+                    onClick={() =>
+                      setCurrent(index.toString() + "-" + y.toString())
+                    }
+                  >
+                    {/*  ch change here add navlink */}
+                    {/*   {item.designation_fr} */}
+                    <NavLink to={item.link}>{item.designation_fr}</NavLink>
+                  </Menu.Item>
+                ))}
+              </Menu.SubMenu>
+            )
+          )}
       </Menu>
       <Card className="absolute bottom-0 left-0 border-0 bg-transparent  flex justify-start gap-x-8">
         {!isCollapsed ? (
@@ -97,10 +121,9 @@ export default function Hsider() {
             className="text-blue-600  text-sm subpixel-antialiased 
           tracking-tighter uppercase"
           >
-            &copy; ew  
+            &copy; ew
           </Text>
         )}
-
       </Card>
     </Sider>
   );

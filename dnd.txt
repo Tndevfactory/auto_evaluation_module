@@ -1,0 +1,190 @@
+  /*  search: false,
+        valueType: "select",  */
+  /// dnd begin
+  const [players, setPlayers] = useState(() => playersJSON);
+  const [team, setTeam] = useState([]);
+
+  const [{ isOver: isOverPlayers }, playersRef] = useDrop(() => ({
+    accept: "team",
+    // drop: (item) => movePlayer(item),
+    collect: (monitor) => ({
+      isOver: !!monitor.isOver(),
+    }),
+  }));
+
+  const [{ isOver: isOverTeam }, teamRef] = useDrop(() => ({
+    accept: "player",
+    // drop: (item) => movePlayer(item),
+    collect: (monitor) => ({
+      isOver: !!monitor.isOver(),
+    }),
+  }));
+
+  const hoverPlayers = isOverPlayers ? "bg-yellow-500" : "bg-white";
+  const hoverTeam = isOverTeam ? "bg-cyan-500" : "bg-white";
+
+  // console.log("isOverPlayers", isOverPlayers);
+  //console.log("isOverTeam", isOverTeam);
+
+  const movePlayer = (item) => {
+    let pl = [];
+    let tl = [];
+    let newPlayers = [];
+    let newTeam = [];
+    console.log("item from adding to team from player : ", item);
+    pl = players.filter((p) => p.id === item.id);
+    setTeam((p) => [...p, pl[0]]);
+    newPlayers = players.filter((p) => p.id !== item.id);
+    console.log("newPlayers", newPlayers);
+    setPlayers([]);
+    setPlayers(newPlayers);
+
+    // setPlayers([...players.filter((p) => p.id !== item.id)]);
+    /*   if (item && item.type === "player") {
+      console.log("item from adding to team from player : ", item);
+      console.log("item.type: ", item.type);
+      console.log("item.id: ", item.id);
+      // get the player from players state
+      pl = players.filter((p) => p.id === item.id);
+      console.log("player", pl);
+      // add the player as new element to team
+      setTeam((p) => [...p, pl[0]]);
+      console.log("team: ", team);
+      // remove it from players state
+
+      newPlayers = players.filter(
+        (p, idx) => p.id !== item.id
+      );
+      newPlayers.forEach((element, index, array) => {
+        console.log(element); // 100, 200, 300
+        console.log(index); // 0, 1, 2
+      });
+      console.log("newPlayers: ", newPlayers);
+      setPlayers([]);
+      setPlayers([
+        {
+          id: 22264,
+          name: "L. Ajorque",
+          firstname: "Ludovic",
+          lastname: "Ajorque",
+          age: 27,
+          birth: {
+            date: "1994-02-25",
+            place: "Saint-Denis",
+            country: "Réunion",
+          },
+          nationality: "France",
+          height: "197 cm",
+          weight: "82 kg",
+          injured: false,
+          photo: "https://media.api-sports.io/football/players/22264.png",
+        },
+      ]);
+      console.log("players: ", players);
+    } else {
+      console.log("item from removing from team to player: ", item);
+      console.log("item.type: ", item.type);
+      console.log("item.id: ", item.id);
+      //Removing a player from team
+      // get the player from players state
+      tl = team.filter((t) => t.id === item.id);
+      console.log("team_player", tl[0]);
+      // add the player as new element to players
+      setPlayers((p) => [...p, tl[0]]);
+      // remove it from team state
+      newTeam = team.filter((t, idx) => t.id !== item.index);
+      setTeam([...newTeam]);
+    } */
+  };
+
+  /// dnd end
+  /* code_theme: 92548795,
+        entreprise: 20220623,
+        departement: "28-06-2022",
+        designation: "28-06-2022", */
+
+
+        import type { useMemo } from "react";
+
+import { useDrag, DragSourceMonitor } from "react-dnd";
+
+const Player = (props) => {
+  const [{ isDragging }, elementToDrag] = useDrag(() => ({
+    type: props.playerType,
+    item: { type: props.playerType, id: props.id, index: props.index },
+
+    end(item, monitor) {
+      //  console.log("item from player ", item);
+      const dropResult = monitor.getDropResult();
+      //   console.log("dropResult", dropResult);
+      if (item && dropResult) {
+        //  console.log(" inside dropResult", dropResult);
+        props.onDropPlayer(item);
+      }
+    },
+    collect: (monitor) => ({
+      isDragging: !!monitor.isDragging(),
+    }),
+  }));
+
+  return (
+    <div
+      className="list-group-item my-1 p-2"
+      ref={elementToDrag}
+      style={{ backgroundColor: isDragging ? "blue" : "" }}
+    >
+      <div className="card border-0">
+        <div className="row no-gutters">
+          <div className="col-md-1">
+            <img
+              src={props.photo}
+              className="img-thumbnail border-secondary rounded-circle"
+            />
+          </div>
+          <div className="col-md-9">
+            <div className="card-body py-1 px-2 text-left">
+              <h5 className="card-title d-inline">{props.name}</h5>
+              <p className="card-text d-inline">, {props.nationality}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default Player;
+
+
+[
+  {
+    "id": 278,
+    "name": "K. Mbappé",
+    "firstname": "Kylian",
+    "lastname": "Mbappé Lottin",
+    "age": 23,
+    "birth": { "date": "1998-12-20", "place": "Paris", "country": "France" },
+    "nationality": "France",
+    "height": "178 cm",
+    "weight": "73 kg",
+    "injured": false,
+    "photo": "https://media.api-sports.io/football/players/278.png"
+  },
+  {
+    "id": 20599,
+    "name": "W. Ben Yedder",
+    "firstname": "Wissam",
+    "lastname": "Ben Yedder",
+    "age": 31,
+    "birth": {
+      "date": "1990-08-12",
+      "place": "Sarcelles",
+      "country": "France"
+    },
+    "nationality": "France",
+    "height": "170 cm",
+    "weight": "68 kg",
+    "injured": false,
+    "photo": "https://media.api-sports.io/football/players/2059.png"
+  }
+]

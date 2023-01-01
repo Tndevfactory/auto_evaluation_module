@@ -51,7 +51,7 @@ const { Paragraph, Title } = Typography;
 const { Option } = Select;
 const { RangePicker } = DatePicker;
 const dateFormat = "DD/MM/YYYY";
-const Cautions: React.FC = ()=>{
+const Cautions: React.FC = () => {
   const dispatch = useDispatch();
   var { cautions } = useSelector((store: any) => store.caution);
   cautions = cautions.map((item, index) =>
@@ -303,6 +303,7 @@ const Cautions: React.FC = ()=>{
     },
     {
       title: "Date d'échéance ",
+      valueType: "select",
       key: 8,
       dataIndex: "DateE",
       responsive: ["md"],
@@ -310,44 +311,6 @@ const Cautions: React.FC = ()=>{
         return (
           moment(a.DateE, dateFormat).valueOf() -
           moment(b.DateE, dateFormat).valueOf()
-        );
-      },
-      renderFormItem: (item, { type, defaultRender, ...rest }, form) => {
-        return (
-          <Space direction="horizontal">
-            <Select value={typeDate} onChange={setTypeDate}>
-              <Option value="date">Intervalle</Option>
-              <Option value="week">Semaine</Option>
-              <Option value="month">Mois</Option>
-              {/* <Option value="quarter">Quarter</Option>
-              <Option value="year">Year</Option> */}
-            </Select>
-            {typeDate === "date" ? (
-              <RangePicker
-                onChange={(e, dateString) => {
-                  console.log(dateString);
-                  setDate(dateString);
-                }}
-                format={dateFormat}
-              />
-            ) : typeDate === "week" ? (
-              <DatePicker
-                picker={typeDate}
-                format={customWeekStartEndFormat}
-                onChange={(e, dateString) => {
-                  console.log(dateString);
-                }}
-              />
-            ) : (
-              <DatePicker
-                picker={typeDate}
-                format={dateFormat}
-                onChange={(e, dateString) => {
-                  console.log(dateString);
-                }}
-              />
-            )}
-          </Space>
         );
       },
     },
@@ -539,7 +502,7 @@ const Cautions: React.FC = ()=>{
                 >
                   Demander une caution
                 </Button>,
-              ]} 
+              ]}
             />
           </Card>
         </Col>
@@ -548,6 +511,6 @@ const Cautions: React.FC = ()=>{
       <CautionDetails {...detailsObj}></CautionDetails>
     </div>
   );
-}
+};
 
 export default Cautions;
