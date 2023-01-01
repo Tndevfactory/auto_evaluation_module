@@ -71,6 +71,10 @@ const UserInterfaceEvaluationFormulaire = () => {
 
   useEffect(() => {
     setDataEvaluation(evaluationData);
+    console.log(
+      "loadingGetEvaluationById.isSuccess ",
+      loadingGetEvaluationById.isSuccess
+    );
   }, [loadingGetEvaluationById.isSuccess]);
   useEffect(() => {
     if (messageCreateEvaluation) {
