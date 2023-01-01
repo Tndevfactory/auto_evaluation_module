@@ -67,23 +67,28 @@ const EvaluationView: React.FC<{
 
   const [dataEvaluation, setDataEvaluation] = useState(() => evaluationData);
 
-  let urlbaseUrlEvaluation =
+  let urlbaseEvaluation =
     import.meta.env.VITE_PUBLIC_URL +
     import.meta.env.VITE_USER_EVALUATION_INTERFACE;
 
   if (import.meta.env.MODE === "development") {
     console.log(".env.MODE :", import.meta.env.MODE);
-    urlbaseUrlEvaluation =
+    urlbaseEvaluation =
       import.meta.env.VITE_PUBLIC_URL +
       import.meta.env.VITE_USER_EVALUATION_INTERFACE;
   } else {
     console.log(".env.MODE : ", import.meta.env.MODE);
-    urlbaseUrlEvaluation =
+    //   netlify
+    urlbaseEvaluation =
+      import.meta.env.VITE_PUBLIC_PRODUCTION_URL_NETLIFY +
+      import.meta.env.VITE_USER_EVALUATION_INTERFACE;
+    //erp
+    urlbaseEvaluation =
       import.meta.env.VITE_PUBLIC_PRODUCTION_URL +
       import.meta.env.VITE_USER_EVALUATION_INTERFACE;
   }
 
-  const [url, setUrl] = useState(urlbaseUrlEvaluation);
+  const [url, setUrl] = useState(urlbaseEvaluation);
 
   const [loadingCopyLink, setLoadingCopyLink] = useState(false);
   const [linkToCopy, setLinkToCopy] = useState("");
