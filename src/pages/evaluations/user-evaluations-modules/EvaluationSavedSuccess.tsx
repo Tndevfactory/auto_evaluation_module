@@ -22,13 +22,7 @@ import {
 } from "antd";
 import { ProCard } from "@ant-design/pro-components";
 import moment from "moment";
-import { useDispatch, useSelector } from "react-redux";
-import {
-  IEvaluation,
-  getUserInterfaceEvaluationByAnnee,
-  userCreateEvaluation,
-  clearMessageCreateUserEvaluation,
-} from "@/features/evaluations/userEvaluations/userEvaluationContractSlice";
+
 import FormItem from "antd/es/form/FormItem";
 import { divIcon } from "leaflet";
 
