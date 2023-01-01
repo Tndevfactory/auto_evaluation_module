@@ -83,9 +83,9 @@ const EvaluationView: React.FC<{
       import.meta.env.VITE_PUBLIC_PRODUCTION_URL_NETLIFY +
       import.meta.env.VITE_USER_EVALUATION_INTERFACE;
     //erp
-    urlbaseEvaluation =
+    /* urlbaseEvaluation =
       import.meta.env.VITE_PUBLIC_PRODUCTION_URL +
-      import.meta.env.VITE_USER_EVALUATION_INTERFACE;
+      import.meta.env.VITE_USER_EVALUATION_INTERFACE; */
   }
 
   const [url, setUrl] = useState(urlbaseEvaluation);
