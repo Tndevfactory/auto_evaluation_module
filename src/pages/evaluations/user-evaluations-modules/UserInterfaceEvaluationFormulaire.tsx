@@ -24,7 +24,7 @@ import { ProCard } from "@ant-design/pro-components";
 import moment from "moment";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  IEvaluation,
+  IUserEvaluation,
   getUserInterfaceEvaluationByAnnee,
   userCreateEvaluation,
   clearMessageCreateUserEvaluation,
