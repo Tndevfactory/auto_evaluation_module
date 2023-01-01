@@ -4,7 +4,7 @@
   "version": "1.0.0",
   "license": "",
   "author": "https://tndev-art.com/",
-  "homepage": ".",
+  "homepage": "/",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
