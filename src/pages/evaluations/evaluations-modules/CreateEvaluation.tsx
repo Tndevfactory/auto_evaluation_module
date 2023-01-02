@@ -27,6 +27,19 @@ import moment from "moment";
 import { useDispatch, useSelector } from "react-redux";
 
 import {
+  ITheme,
+  getThemes,
+  addThemeOptions,
+} from "@/features/evaluations/themes/themesContractSlice";
+
+import {
+  IQuestion,
+  getQuestions,
+  addQuestionOptions,
+  deleteQuestion,
+} from "@/features/evaluations/questions/questionsContractSlice";
+
+import {
   IEvaluation,
   getEvaluations,
   getEvaluationById,
@@ -143,28 +156,22 @@ const CreateNewEvaluation: React.FC<{
   const dispatch = useDispatch();
   const [form] = Form.useForm();
 
+  useEffect(() => {
+    dispatch(getThemes());
+    dispatch(getQuestions());
+  }, []);
+
+  useEffect(() => {
+    setDataThemeOptions(themeOptions);
+  }, [themeOptions]);
+  useEffect(() => {
+    setDataQuestionOptions(questionOptions);
+  }, [questionOptions]);
+
   const onClose = () => {
     dispatch(getEvaluations());
     setVisible(false);
   };
-
-  useEffect(() => {
-    console.log("themeOptions ", themeOptions);
-    let themeOptionsCopy = [...themeOptions];
-    let newThemeOption = {
-      value: 0,
-      label: "Choisir un Theme ",
-    };
-    themeOptionsCopy = [...themeOptionsCopy, newThemeOption];
-    themeOptionsCopy.sort((a, b) => a.value - b.value);
-    console.log("themeOptionsCopy ", themeOptionsCopy);
-    setDataThemeOptions(themeOptionsCopy);
-    //setDataThemeOptions(themeOptions);
-  }, [themeOptions]);
-
-  useEffect(() => {
-    setDataQuestionOptions(questionOptions);
-  }, [questionOptions]);
 
   // handling add theme block
   const handleAddThemeBlock = (e) => {

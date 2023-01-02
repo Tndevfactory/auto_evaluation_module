@@ -102,27 +102,6 @@ const EvaluationEnvoi: React.FC<{
   }, [loadingGetEvaluationById.isSuccess]);
 
   useEffect(() => {
-    /*  {
-      value: "1",
-      label: "Apport Manageriale",
-    } */
-    const opt = themesData?.map(({ id, designation }) => ({
-      value: id + 1,
-      label: designation,
-    }));
-    //console.log("opt", JSON.stringify(opt));
-    setOptions(() => opt);
-    // save themeoptions to redux state
-    dispatch(addThemeOptions(opt));
-    // console.log("setOptions trigered by themesData", JSON.stringify(options));
-  }, [themesData]);
-
-  useEffect(() => {
-    setDataQuestion(questionData);
-    // console.log("useEffect trigered");
-  }, [loadingGetQuestionById.isSuccess]);
-
-  useEffect(() => {
     console.log(messageUpdateQuestion);
     //clearMessage();
     // use reducers

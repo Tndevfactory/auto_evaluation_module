@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from "react";
 import "@/style/modules/Flotte.less";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import type { NotificationPlacement } from "antd/es/notification/interface";
-import { useRefState } from "./hooks";
+import { useRefState } from "./userInterfaceHooks";
 import {
   UploadProps,
   Button,
@@ -24,15 +24,13 @@ import {
 import { ProCard } from "@ant-design/pro-components";
 import moment from "moment";
 import { useDispatch, useSelector } from "react-redux";
+
 import {
-  IEvaluation,
-  getEvaluations,
-  getEvaluationById,
-  createEvaluation,
-  updateEvaluation,
-  deleteEvaluation,
-  clearMessage,
-} from "@/features/evaluations/evaluations/evaluationContractSlice";
+  IUserEvaluation,
+  getUserInterfaceEvaluationById,
+  getAllUserInterfaceEvaluationByAnnee,
+} from "@/features/evaluations/userEvaluations/userEvaluationContractSlice";
+
 const { Option } = Select;
 const { Title, Text, Link } = Typography;
 const { TextArea } = Input;
@@ -55,12 +53,12 @@ const UserEvaluationView: React.FC<{
 
   const dispatch = useDispatch();
   const { windowWidth } = useSelector((store: any) => store.ui);
-  const { userEvaluationData, loadingGetEvaluationById } = useSelector(
+  const { userEvaluationsDataByID, loadingGetUserEvaluationById } = useSelector(
     (store: any) => store.userEvaluation
   );
 
   const [dataEvaluation, setDataEvaluation] = useState(
-    () => userEvaluationData
+    () => userEvaluationsDataByID
   );
 
   let urlbaseUrlEvaluation =
@@ -91,26 +89,16 @@ const UserEvaluationView: React.FC<{
       setLoadingCopyLink(false);
     }, 1100);
   };
-  const onCopyLink = () => {
-    openNotificationCopyLink("topRight");
-
-    /* setTimeout(() => {
-      setLinkToCopy("");
-    }, 1500); */
-    //  setLinkToCopy("");
-    // setTimeout(() => setLinkToCopy(""), 1100);
-  };
 
   useEffect(() => {
-    setDataEvaluation(userEvaluationData);
-    setLinkToCopy("");
-  }, [loadingGetEvaluationById.isSuccess]);
+    setDataEvaluation(userEvaluationsDataByID);
+  }, [loadingGetUserEvaluationById.isSuccess]);
 
   useEffect(() => {
     console.log("completeUrlEvaluation", dataEvaluation);
-    let completeUrlEvaluation = url + userEvaluationData.annee;
+    let completeUrlEvaluation = url + userEvaluationsDataByID.annee;
     setLinkToCopy(completeUrlEvaluation);
-  }, [loadingGetEvaluationById.isSuccess]);
+  }, [loadingGetUserEvaluationById.isSuccess]);
 
   const styleCard: React.CSSProperties = {
     padding: "10px",
@@ -119,10 +107,9 @@ const UserEvaluationView: React.FC<{
   const onClose = () => {
     setVisible(false);
     // clear update message from the store state
-    clearMessage();
   };
   const handleResetField = () => {
-    setDataEvaluation(userEvaluationData);
+    setDataEvaluation(userEvaluationsDataByID);
   };
   const handleOnchange = (e) => {
     const { name, value } = e.target;
@@ -132,18 +119,14 @@ const UserEvaluationView: React.FC<{
       [name]: value,
     });
   };
-  const handleSubmit = () => {
-    dispatch(updateEvaluation(dataEvaluation));
-    dispatch(getEvaluationById());
-    setVisible(false);
-  };
+
   return (
     <>
       {contextHolder}
 
       <Drawer
         title={"Fermer"}
-        width={windowWidth - 100}
+        width={windowWidth}
         onClose={onClose}
         open={visible}
         bodyStyle={{
@@ -153,8 +136,8 @@ const UserEvaluationView: React.FC<{
       >
         <Space direction="vertical" size="middle" style={{ display: "flex" }}>
           <Card>
-            {userEvaluationData ? (
-              <Form onFinish={handleSubmit}>
+            {userEvaluationsDataByID ? (
+              <Form>
                 <Row gutter={16}>
                   <Col xs={24}>
                     <Space
@@ -267,7 +250,9 @@ const UserEvaluationView: React.FC<{
                             <TextArea
                               className="bg-gray-100"
                               rows={4}
-                              name={q.response}
+                              value={q.response}
+                              name="response"
+                              disabled
                             />
                           </Space>
                         </div>
@@ -291,21 +276,14 @@ const UserEvaluationView: React.FC<{
                         >
                           Fermer
                         </Button>
-                        <Button
+                        {/*  <Button
                           type="primary"
                           onClick={handleCopyLink}
                           style={{ marginRight: "10px" }}
                           loading={loadingCopyLink}
                         >
-                          <CopyToClipboard
-                            /*  text={"http://auto-evaluation.com"} */
-                            text={linkToCopy}
-                            onCopy={onCopyLink}
-                          >
-                            {/*    send pop up confirmation to screen */}
-                            <span>Copier lien {linkToCopy}</span>
-                          </CopyToClipboard>
-                        </Button>
+                          v
+                        </Button> */}
                         {/*  <Button
                           type="primary"
                           htmlType="submit"

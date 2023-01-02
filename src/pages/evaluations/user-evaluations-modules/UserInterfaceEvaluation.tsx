@@ -30,33 +30,14 @@ import {
 } from "@ant-design/icons";
 import moment from "moment";
 
-import EvaluationView from "./UserEvaluationView";
+import EvaluationView from "./UserInterfaceEvaluationView";
 
 import { useDispatch, useSelector } from "react-redux";
-import { getEvaluationById } from "../../../features/evaluations/evaluations/evaluationContractSlice";
-import { getAllUserInterfaceEvaluationByAnnee } from "../../../features/evaluations/userEvaluations/userEvaluationContractSlice";
-
-import {
-  ITheme,
-  getThemes,
-  addThemeOptions,
-} from "@/features/evaluations/themes/themesContractSlice";
-
-import {
-  IQuestion,
-  getQuestions,
-  addQuestionOptions,
-  deleteQuestion,
-} from "@/features/evaluations/questions/questionsContractSlice";
-
-import {
-  getEvaluations,
-  deleteEvaluation,
-} from "@/features/evaluations/evaluations/evaluationContractSlice";
 
 import {
   IUserEvaluation,
   getUserInterfaceEvaluationById,
+  getAllUserInterfaceEvaluationByAnnee,
 } from "@/features/evaluations/userEvaluations/userEvaluationContractSlice";
 
 const { Title } = Typography;
@@ -66,15 +47,8 @@ const { TextArea } = Input;
 function UserInterfaceEvaluations() {
   const dispatch = useDispatch();
 
-  const { themesData, loadingThemes, errorThemes } = useSelector(
-    (store: any) => store.evaluationTheme
-  );
-  const { questionsData, loadingQuestions, errorQuestions, questionOptions } =
-    useSelector((store: any) => store.evaluationQuestion);
-
-  const { loadingGetAllEvaluationByAnnee, userEvaluationsData } = useSelector(
-    (store: any) => store.userEvaluation
-  );
+  const { loadingGetAllEvaluationByAnnee, allUserEvaluationsDataByAnnee } =
+    useSelector((store: any) => store.userEvaluation);
 
   var { windowWidth } = useSelector((store: any) => store.ui);
   const [visibleForm, setVisibleForm] = useState(false);
@@ -84,8 +58,9 @@ function UserInterfaceEvaluations() {
   const [refresh, forceRefresh] = useState(0);
 
   const [openSelectMenu, setOpenSelectMenu] = useState(false);
-  const [dataUserEvaluations, setDataUserEvaluations] =
-    useState(userEvaluationsData);
+  const [dataUserEvaluations, setDataUserEvaluations] = useState(
+    allUserEvaluationsDataByAnnee
+  );
 
   const [id, setId] = useState(1);
 
@@ -103,7 +78,7 @@ function UserInterfaceEvaluations() {
     forceRefresh: forceRefresh,
   };
 
-  const detailsObjEnvoi = {
+  /*  const detailsObjEnvoi = {
     id: id,
     visible: visibleDetailsEnvoi,
     setVisible: setVisibleDetailsEnvoi,
@@ -115,18 +90,18 @@ function UserInterfaceEvaluations() {
     visible: visibleDetails,
     setVisible: setVisibleDetails,
     forceRefresh: forceRefresh,
-  };
+  }; */
 
   useEffect(() => {
     dispatch(getAllUserInterfaceEvaluationByAnnee("2022"));
   }, []);
 
   useEffect(() => {
-    setDataUserEvaluations(userEvaluationsData);
+    setDataUserEvaluations(allUserEvaluationsDataByAnnee);
   }, [refresh]);
 
   useEffect(() => {
-    setDataUserEvaluations(userEvaluationsData);
+    setDataUserEvaluations(allUserEvaluationsDataByAnnee);
   }, [loadingGetAllEvaluationByAnnee.isSuccess]);
 
   const handleOpenChange = (flag: boolean) => {
@@ -198,20 +173,20 @@ function UserInterfaceEvaluations() {
                 <EditOutlined />
               </Tooltip>
             </a> */}
-            <Divider type="vertical" />
+            {/*   <Divider type="vertical" />
             <a>
               <Popconfirm
                 title="voulez-vous vraiment supprimer cette evaluation ?"
-                onConfirm={() => {
+                  onConfirm={() => {
                   dispatch(deleteEvaluation(id));
                   dispatch(getEvaluations());
-                }}
+                }} 
                 okText="Oui"
                 cancelText="Non"
               >
                 <DeleteOutlined />
               </Popconfirm>
-            </a>
+            </a> */}
             {/*   <Divider type="vertical" />
             <a
               onClick={() => {

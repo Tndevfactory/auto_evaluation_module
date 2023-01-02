@@ -11,7 +11,9 @@ export interface IUserEvaluation {
     username: string;
     user_id: string;
   };
-  userEvaluationData: {};
+  userEvaluationsDataByAnnee: {};
+  allUserEvaluationsDataByAnnee: {};
+  userEvaluationsDataByID: {};
   messageUserEvaluations: string;
   loadingUserEvaluations?: {
     isIdle: Boolean;
@@ -19,8 +21,17 @@ export interface IUserEvaluation {
     isSuccess: Boolean;
   };
   errorEvaluations?: string | null;
+
   messageGetEvaluationById: string;
   loadingGetEvaluationById?: {
+    isIdle: Boolean;
+    isPending: Boolean;
+    isSuccess: Boolean;
+  };
+
+  errorGetUserEvaluationsByID?: string | null;
+  messageGetUserEvaluationById: string;
+  loadingGetUserEvaluationById?: {
     isIdle: Boolean;
     isPending: Boolean;
     isSuccess: Boolean;
@@ -65,7 +76,9 @@ export interface IUserEvaluation {
 
 const initialState = {
   userEvaluationsData: {}[""],
-  userEvaluationData: {},
+  userEvaluationsDataByAnnee: {},
+  userEvaluationsDataByID: {},
+  allUserEvaluationsDataByAnnee: {},
 
   messageUserEvaluations: "",
   loadingUserEvaluations: {
@@ -91,6 +104,14 @@ const initialState = {
     isSuccess: false,
   },
   errorGetEvaluationById: null,
+
+  errorGetUserEvaluationsByID: "",
+  messageGetUserEvaluationById: "",
+  loadingGetUserEvaluationById: {
+    isIdle: true,
+    isPending: false,
+    isSuccess: false,
+  },
 
   messageCreateEvaluation: "",
   loadingCreateEvaluation: {
@@ -212,38 +233,37 @@ const userEvaluationContractSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    //getThemeById
     builder.addCase(
       getUserInterfaceEvaluationByAnnee.pending,
       (state, action) => {
-        state.loadingGetEvaluationById.isPending = true;
-        state.loadingGetEvaluationById.isSuccess = false;
-        state.loadingGetEvaluationById.isPending = false;
-        state.errorGetEvaluationById = null;
+        state.loadingGetAllEvaluationByAnnee.isPending = true;
+        state.loadingGetAllEvaluationByAnnee.isSuccess = false;
+        state.loadingGetAllEvaluationByAnnee.isPending = false;
+        state.errorGetAllEvaluationByAnnee = null;
       }
     );
     builder.addCase(
       getUserInterfaceEvaluationByAnnee.fulfilled,
       (state, action) => {
         // Add item to the cartItem array
-        state.userEvaluationsData = action.payload;
-        state.loadingGetEvaluationById.isSuccess = true;
-        state.loadingGetEvaluationById.isPending = false;
-        state.loadingGetEvaluationById.isIdle = false;
-        state.errorGetEvaluationById = null;
+        state.userEvaluationsDataByAnnee = action.payload;
+        state.loadingGetAllEvaluationByAnnee.isSuccess = true;
+        state.loadingGetAllEvaluationByAnnee.isPending = false;
+        state.loadingGetAllEvaluationByAnnee.isIdle = false;
+        state.errorGetAllEvaluationByAnnee = null;
       }
     );
     builder.addCase(
       getUserInterfaceEvaluationByAnnee.rejected,
       (state, action) => {
-        state.loadingGetEvaluationById.isIdle = true;
-        state.loadingGetEvaluationById.isSuccess = false;
-        state.loadingGetEvaluationById.isPending = false;
+        state.loadingGetAllEvaluationByAnnee.isIdle = true;
+        state.loadingGetAllEvaluationByAnnee.isSuccess = false;
+        state.loadingGetAllEvaluationByAnnee.isPending = false;
 
         if (action) {
-          state.errorGetEvaluationById = action.error.message;
+          state.errorGetAllEvaluationByAnnee = action.error.message;
         } else {
-          state.errorGetEvaluationById = "something went wrong ";
+          state.errorGetAllEvaluationByAnnee = "something went wrong ";
         }
       }
     );
@@ -263,7 +283,7 @@ const userEvaluationContractSlice = createSlice({
       getAllUserInterfaceEvaluationByAnnee.fulfilled,
       (state, action) => {
         // Add item to the cartItem array
-        state.userEvaluationsData = action.payload;
+        state.allUserEvaluationsDataByAnnee = action.payload;
         state.loadingGetAllEvaluationByAnnee.isSuccess = true;
         state.loadingGetAllEvaluationByAnnee.isPending = false;
         state.loadingGetAllEvaluationByAnnee.isIdle = false;
@@ -287,35 +307,35 @@ const userEvaluationContractSlice = createSlice({
     );
 
     builder.addCase(getUserInterfaceEvaluationById.pending, (state, action) => {
-      state.loadingGetEvaluationById.isPending = true;
-      state.loadingGetEvaluationById.isSuccess = false;
-      state.loadingGetEvaluationById.isPending = false;
-      state.errorGetEvaluationById = null;
+      state.loadingGetUserEvaluationById.isPending = true;
+      state.loadingGetUserEvaluationById.isSuccess = false;
+      state.loadingGetUserEvaluationById.isPending = false;
+      state.errorGetUserEvaluationsByID = null;
     });
 
     builder.addCase(
       getUserInterfaceEvaluationById.fulfilled,
       (state, action) => {
         // Add item to the cartItem array
-        state.userEvaluationData = action.payload;
-        state.loadingGetEvaluationById.isSuccess = true;
-        state.loadingGetEvaluationById.isPending = false;
-        state.loadingGetEvaluationById.isIdle = false;
-        state.errorGetEvaluationById = null;
+        state.userEvaluationsDataByID = action.payload;
+        state.loadingGetUserEvaluationById.isSuccess = true;
+        state.loadingGetUserEvaluationById.isPending = false;
+        state.loadingGetUserEvaluationById.isIdle = false;
+        state.errorGetUserEvaluationsByID = null;
       }
     );
 
     builder.addCase(
       getUserInterfaceEvaluationById.rejected,
       (state, action) => {
-        state.loadingGetEvaluationById.isIdle = true;
-        state.loadingGetEvaluationById.isSuccess = false;
-        state.loadingGetEvaluationById.isPending = false;
+        state.loadingGetUserEvaluationById.isIdle = true;
+        state.loadingGetUserEvaluationById.isSuccess = false;
+        state.loadingGetUserEvaluationById.isPending = false;
 
         if (action) {
-          state.errorGetEvaluationById = action.error.message;
+          state.errorGetUserEvaluationsByID = action.error.message;
         } else {
-          state.errorGetEvaluationById = "something went wrong ";
+          state.errorGetUserEvaluationsByID = "something went wrong ";
         }
       }
     );

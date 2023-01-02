@@ -23,15 +23,17 @@ import {
 import { ProCard } from "@ant-design/pro-components";
 import moment from "moment";
 import { useDispatch, useSelector } from "react-redux";
+
 import {
   IUserEvaluation,
   getUserInterfaceEvaluationByAnnee,
   userCreateEvaluation,
-  clearMessageCreateUserEvaluation,
 } from "@/features/evaluations/userEvaluations/userEvaluationContractSlice";
+
 import FormItem from "antd/es/form/FormItem";
 import { divIcon } from "leaflet";
 import { Divider } from "antd";
+
 const { Option } = Select;
 const { Title, Text, Link } = Typography;
 const { TextArea } = Input;
@@ -55,14 +57,16 @@ const UserInterfaceEvaluationFormulaire = () => {
   const { windowWidth } = useSelector((store: any) => store.ui);
   const {
     messageCreateEvaluation,
-    evaluationData,
 
-    loadingGetEvaluationById,
+    userEvaluationsDataByAnnee,
+    loadingGetAllEvaluationByAnnee,
     errorUpdateEvaluation,
     loadingUpdateEvaluation,
   } = useSelector((store: any) => store.userEvaluation);
 
-  const [dataEvaluation, setDataEvaluation] = useState(evaluationData);
+  const [dataEvaluation, setDataEvaluation] = useState(
+    userEvaluationsDataByAnnee
+  );
 
   useEffect(() => {
     dispatch(getUserInterfaceEvaluationByAnnee(annee));
@@ -70,25 +74,12 @@ const UserInterfaceEvaluationFormulaire = () => {
   }, []);
 
   useEffect(() => {
-    setDataEvaluation(evaluationData);
+    setDataEvaluation(userEvaluationsDataByAnnee);
     console.log(
       "loadingGetEvaluationById.isSuccess ",
-      loadingGetEvaluationById.isSuccess
+      loadingGetAllEvaluationByAnnee.isSuccess
     );
-  }, [loadingGetEvaluationById.isSuccess]);
-  useEffect(() => {
-    if (messageCreateEvaluation) {
-      CreateNotification("topRight");
-      setTimeout(
-        () => navigate("/evaluation-saved-with-success", { replace: true }),
-        1500
-      );
-    }
-    dispatch(clearMessageCreateUserEvaluation());
-
-    setTimeout(() => dispatch(clearMessageCreateUserEvaluation()), 1000);
-    // setTimeout(() => navigate("/evaluation-saved-with-success"), 2000);
-  }, [messageCreateEvaluation]);
+  }, [loadingGetAllEvaluationByAnnee.isSuccess]);
 
   const styleCard: React.CSSProperties = {
     padding: "10px",
@@ -171,7 +162,7 @@ const UserInterfaceEvaluationFormulaire = () => {
       <div title={"Fermer"} className="ThemeDetails">
         <Space direction="vertical" size="middle" style={{ display: "flex" }}>
           <Card>
-            {evaluationData ? (
+            {userEvaluationsDataByAnnee ? (
               <Form onFinish={handleSubmit}>
                 <Row gutter={16}>
                   <Col xs={24}>

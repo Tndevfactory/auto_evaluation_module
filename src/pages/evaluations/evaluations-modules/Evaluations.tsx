@@ -54,6 +54,7 @@ import {
   getEvaluations,
   deleteEvaluation,
 } from "@/features/evaluations/evaluations/evaluationContractSlice";
+import { theme } from "tailwind.config";
 
 const { Title } = Typography;
 const { Option } = Select;
@@ -66,7 +67,7 @@ function Evaluations() {
     errorEvaluations,
     evaluationData,
   } = useSelector((store: any) => store.evaluationEval);
-  const { themesData, loadingThemes, errorThemes } = useSelector(
+  const { themesData, loadingThemes, errorThemes, themeOptions } = useSelector(
     (store: any) => store.evaluationTheme
   );
   const { questionsData, loadingQuestions, errorQuestions, questionOptions } =
@@ -112,50 +113,32 @@ function Evaluations() {
   };
 
   useEffect(() => {
-    dispatch(getEvaluations());
     dispatch(getThemes());
     dispatch(getQuestions());
+    dispatch(getEvaluations());
   }, []);
 
   useEffect(() => {
-    /*  {
-      value: "1",
-      label: "Apport Manageriale",
-    } */
+    console.log("themesData ", themesData);
     const opt = themesData?.map(({ id, designation }) => ({
       value: id,
       label: designation,
     }));
-    //console.log("opt", JSON.stringify(opt));
-    /* setOptions(() => opt); */
-    // save themeoptions to redux state
-    dispatch(addThemeOptions(opt));
-    // console.log("setOptions trigered by themesData", JSON.stringify(options));
-  }, []);
+    let themeOptionsCopy = opt && [...opt];
+    console.log("themeOptionsCopy ", themeOptionsCopy);
 
-  useEffect(() => {
-    /*  {
-      value: "1",
-      label: "Apport Manageriale",
-    } */
-    let opt = themesData?.map(({ id, designation }) => ({
-      value: id,
-      label: designation,
-    }));
-
-    let selectTheme = {
+    let newThemeOption = {
       value: 0,
-      label: "Choisir un theme",
+      label: "Choisir un Theme",
     };
-    /*   opt = [...opt, selectTheme];*/
-    // opt.sort((a, b) => a.label - b.label);
-    //  opt.splice(1, 0, selectTheme);
-    console.log("opt", opt);
-    setOptions(() => opt);
-    // save themeoptions to redux state
-    dispatch(addThemeOptions(opt));
-    // console.log("setOptions trigered by themesData", JSON.stringify(options));
-  }, [themesData]);
+    themeOptionsCopy = themeOptionsCopy && [
+      ...themeOptionsCopy,
+      newThemeOption,
+    ];
+    themeOptionsCopy && themeOptionsCopy.sort((a, b) => a.value - b.value);
+    console.log("themeOptionsCopy ", themeOptionsCopy);
+    dispatch(addThemeOptions(themeOptionsCopy));
+  }, [loadingThemes.isSuccess]);
 
   useEffect(() => {
     /*  {
@@ -167,18 +150,24 @@ function Evaluations() {
       theme_id: theme_id,
       label: question_designation,
     }));
-    let selectQuestion = {
+
+    let questionOptionsCopy = opt && [...opt];
+    console.log("opt ", opt);
+    let newQuestionOption = {
       value: 0,
       theme_id: 0,
       label: "Choisir une question ",
     };
-    //  opt.splice(1, 0, selectQuestion);
-    console.log("opt", opt);
-    setOptions(() => opt);
-    // save themeoptions to redux state
-    dispatch(addQuestionOptions(opt));
+    questionOptionsCopy = questionOptionsCopy && [
+      ...questionOptionsCopy,
+      newQuestionOption,
+    ];
+    questionOptionsCopy &&
+      questionOptionsCopy.sort((a, b) => a.value - b.value);
+    console.log("questionOptionsCopy ", questionOptionsCopy);
+    dispatch(addQuestionOptions(questionOptionsCopy));
     // console.log("setOptions trigered by themesData", JSON.stringify(options));
-  }, [questionsData]);
+  }, [loadingQuestions.isSuccess]);
 
   const handleOpenChange = (flag: boolean) => {
     setOpenSelectMenu(flag);
@@ -397,6 +386,7 @@ function Evaluations() {
           </Card>
         </Col>
       </Row>
+
       <CreateEvaluation {...obj}></CreateEvaluation>
       <EvaluationDetails {...detailsObj}></EvaluationDetails>
       <EvaluationView {...detailsObjView}></EvaluationView>

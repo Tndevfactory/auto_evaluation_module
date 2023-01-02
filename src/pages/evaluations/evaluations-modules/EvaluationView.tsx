@@ -163,7 +163,7 @@ const EvaluationView: React.FC<{
 
       <Drawer
         title={"Fermer"}
-        width={windowWidth - 100}
+        width={windowWidth}
         onClose={onClose}
         open={visible}
         bodyStyle={{
