@@ -33,6 +33,7 @@ import Themes from "../themes-modules/Themes";
 import ThemeDetails from "../themes-modules/ThemeDetails";
 /* import { IEvaluation } from '../../../features/evaluations/evaluations/evaluationContractSlice'; */
 import Questions from "../questions-modules/Questions";
+import { Tooltip } from "antd";
 import {
   getEvaluations,
   getEvaluationById,
@@ -152,6 +153,66 @@ const EvaluationDetails: React.FC<{
       ...dataEvaluation,
       [name]: value,
     });
+  };
+
+  const handleRemoveThemeBlock = (e) => {
+    const { themeid, themeindex } = e.target.dataset;
+    console.log("themeid ", themeid);
+    console.log("themeindex ", themeindex);
+
+    let themesCopy = [...dataEvaluation.themes];
+    themesCopy.splice(themeindex, 1);
+
+    setDataEvaluation({
+      ...dataEvaluation,
+      themes: themesCopy,
+    });
+  };
+
+  const handleRemoveQuestionBlock = (e) => {
+    const { questionid, questionindex, themeid } = e.target.dataset;
+    console.log("questionid ", questionid);
+    console.log("questionindex ", questionindex);
+    console.log("themeid ", themeid);
+
+    //copy themesArrayCopy
+    let themesArrayCopy = [...dataEvaluation.themes];
+    console.log("themesArrayCopy ", themesArrayCopy);
+    //find theme index inside copy
+    let themeindex = themesArrayCopy.findIndex((item) => item.id === themeid);
+    console.log("themeindex ", themeindex);
+    // copy the theme in themeObjectCopy
+    let themeObjectCopy = { ...themesArrayCopy[themeindex] };
+    console.log("themeObjectCopy ", themeObjectCopy);
+
+    //copy questionsArray
+    let questionsArrayCopy = [...themeObjectCopy.questions];
+    console.log("questionsArrayCopy ", questionsArrayCopy);
+
+    //push to new question block to questionsArrayCopy, la question a ajouter doit porter le meme theme_id que tout le theme
+    let qIndex = questionsArrayCopy.findIndex(
+      (item) => item.id === parseInt(questionid)
+    );
+    questionsArrayCopy.splice(qIndex, 1);
+    console.log("questionsArrayCopy ", questionsArrayCopy);
+
+    //replace le questionArray dans themeObjectCopy
+    let newTheme = {
+      id: themeObjectCopy.id,
+      theme_designation: themeObjectCopy.theme_designation,
+      questions: [...questionsArrayCopy],
+    };
+    console.log("newTheme ", newTheme);
+
+    //copy the questionarray in themearraycopy
+    themesArrayCopy.splice(themeindex, 1, newTheme);
+    console.log("themesArrayCopy ", themesArrayCopy);
+
+    setDataEvaluation({
+      ...dataEvaluation,
+      themes: themesArrayCopy,
+    });
+    console.log("dataEvaluation ", dataEvaluation);
   };
 
   const onChangeDataPicker: DatePickerProps["onChange"] = (
@@ -379,7 +440,7 @@ const EvaluationDetails: React.FC<{
 
       <Drawer
         title={"Fermer"}
-        width={windowWidth - 100}
+        width={windowWidth}
         onClose={onClose}
         open={visible}
         bodyStyle={{
@@ -540,6 +601,34 @@ const EvaluationDetails: React.FC<{
                             </option>
                           ))}
                         </select>
+
+                        {ith + 1 > 1 ? (
+                          <span
+                            onClick={(e) => handleRemoveThemeBlock(e)}
+                            className="ml-3 mt-1 text-gray-600 inline-block cursor-pointer shadow-sm hover:text-red-400"
+                          >
+                            <Tooltip placement="top" title={"Supprimer block "}>
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                strokeWidth="1.5"
+                                stroke="currentColor"
+                                className="w-7 h-7"
+                                data-themeid={th.id}
+                                data-themeindex={ith}
+                              >
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  d="M15 12H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"
+                                />
+                              </svg>
+                            </Tooltip>
+                          </span>
+                        ) : (
+                          ""
+                        )}
                       </Space>
                       {th?.questions?.map((q, iq, arr) => (
                         <div key={iq}>
@@ -580,7 +669,7 @@ const EvaluationDetails: React.FC<{
                                border border-gray-200
                               focus:ring-blue-500
                               focus:border-blue-500 
-                              block w-92 p-2 mb-2
+                              block w-80 p-2 mb-2
                                 "
                             >
                               {questionOptions
@@ -594,6 +683,39 @@ const EvaluationDetails: React.FC<{
                                   </option>
                                 ))}
                             </select>
+
+                            {iq + 1 > 1 ? (
+                              <span
+                                onClick={(e) => handleRemoveQuestionBlock(e)}
+                                className=" mt-1 text-gray-600 inline-block cursor-pointer shadow-sm hover:text-red-400"
+                                style={{ marginLeft: "8px" }}
+                              >
+                                <Tooltip
+                                  placement="top"
+                                  title={"Supprimer sous block "}
+                                >
+                                  <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    strokeWidth="1.5"
+                                    stroke="currentColor"
+                                    className="w-7 h-7"
+                                    data-themeid={q.theme_id}
+                                    data-questionindex={iq}
+                                    data-questionid={q.id}
+                                  >
+                                    <path
+                                      strokeLinecap="round"
+                                      strokeLinejoin="round"
+                                      d="M15 12H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"
+                                    />
+                                  </svg>
+                                </Tooltip>
+                              </span>
+                            ) : (
+                              ""
+                            )}
                           </Space>
 
                           <Space
@@ -607,7 +729,7 @@ const EvaluationDetails: React.FC<{
                           >
                             <TextArea
                               className="bg-gray-100"
-                              rows={4}
+                              rows={3}
                               name={q.response}
                             />
                           </Space>
@@ -631,6 +753,13 @@ const EvaluationDetails: React.FC<{
                           style={{ marginRight: "10px" }}
                         >
                           Fermer
+                        </Button>
+                        <Button
+                          className="btnAnnuler"
+                          onClick={handleResetField}
+                          style={{ marginRight: "10px" }}
+                        >
+                          Reset
                         </Button>
                         {/* call update-evaluation , no matter the year if is the same */}
 

@@ -201,7 +201,7 @@ const CreateNewEvaluation: React.FC<{
 
     // addong directly block
     let themes = [...evaluation.themes];
-    themes.pop();
+    themes.splice(themeindex, 1);
     setEvaluation({
       ...evaluation,
       themes: themes,
@@ -422,7 +422,8 @@ const CreateNewEvaluation: React.FC<{
     // replacing by splice or changing position based on index od question further in the same at
     questionsCopy.splice(questionindex, 1, q);
     // save ryan and put it in the place of murder
-    questionsCopy.splice(elementIndex, 1, element);
+    // stop saving ryan
+    // questionsCopy.splice(elementIndex, 1, element);
     // put ryan in the place of outsider
     questionsCopy.splice(questionindex, 1, q);
     console.log("questionsCopy ", questionsCopy);
@@ -748,24 +749,21 @@ const CreateNewEvaluation: React.FC<{
                         className="bg-gray-200 shadow"
                       >
                         {th.questions.map((q, iq, arr) => (
-                          <Space
-                            className=" mb-1 bg-transparent"
-                            style={{
-                              width: "80%",
-                              color:
-                                q.question_designation ===
-                                "Choisir une question"
-                                  ? "red"
-                                  : "",
-                            }}
-                          >
+                          <Space className=" mb-1 bg-transparent">
                             <Title
                               level={5}
-                              style={{ fontSize: "0.9rem", marginLeft: "1rem" }}
+                              style={{
+                                fontSize: "0.9rem",
+                                marginLeft: "1rem",
+                                color:
+                                  q.question_designation ===
+                                  "Choisir une question"
+                                    ? "red !important"
+                                    : "",
+                              }}
                             >
                               {iq + 1} {"-"} {q.question_designation}{" "}
                             </Title>
-
                             <select
                               /*  data-theme_index={arr[iq].theme_index} */
                               data-questionindex={iq}
@@ -852,7 +850,6 @@ const CreateNewEvaluation: React.FC<{
                             ) : (
                               ""
                             )}
-
                             {/*                             <span
                               onClick={() => setOpenModalCreateQuestion(true)}
                               className=" mt-1 text-blue-600 inline-block cursor-pointer shadow-sm hover:text-blue-500 "
