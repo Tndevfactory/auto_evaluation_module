@@ -330,6 +330,14 @@ const UserInterfaceEvaluationFormulaire = () => {
                         >
                           Fermer
                         </Button>
+                        <Button
+                          type="primary"
+                          className="btnAnnuler"
+                          onClick={onClose}
+                          style={{ marginRight: "10px" }}
+                        >
+                          Sauvegarder
+                        </Button>
 
                         <Button
                           type="primary"

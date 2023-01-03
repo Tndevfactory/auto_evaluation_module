@@ -30,13 +30,17 @@ import {
   ITheme,
   getThemes,
   addThemeOptions,
+  createTheme,
+  clearMessageTheme,
 } from "@/features/evaluations/themes/themesContractSlice";
 
 import {
   IQuestion,
   getQuestions,
+  createQuestion,
   addQuestionOptions,
   deleteQuestion,
+  clearMessageQuestion,
 } from "@/features/evaluations/questions/questionsContractSlice";
 
 import {
@@ -176,7 +180,7 @@ const CreateNewEvaluation: React.FC<{
   // handling add theme block
   const handleAddThemeBlock = (e) => {
     // need theme id or valueID  and theme index
-
+    dispatch(getQuestions());
     const { themeid, themeindex } = e.target.dataset;
 
     console.log("themeid ", themeid);
@@ -339,6 +343,7 @@ const CreateNewEvaluation: React.FC<{
 
   // select theme to update ui
   const handleOnchangeSelectTheme = (e) => {
+    dispatch(getQuestions());
     const { value } = e.currentTarget;
     const { themeindex, themeid } = e.currentTarget.dataset;
 
@@ -461,25 +466,122 @@ const CreateNewEvaluation: React.FC<{
     dispatch(createEvaluation(evaluation));
   };
 
+  const [newTheme, setNewTheme] = useState({
+    designation: "",
+    descriptif: "",
+  });
+
+  const [newQuestion, setNewQuestion] = useState({
+    theme_id: "",
+    theme_designation: "",
+    question_designation: "",
+  });
+
+  /* dispatch(
+    createTheme({
+      descriptif: values.descriptif,
+      designation: values.designation,
+    })
+  );
+  dispatch(getThemes());
+  forceRefresh(Math.random());
+  setVisible(false); 
+  
+  */
+
+  const openThemeModal = () => {
+    dispatch(getThemes());
+    setOpenModalCreateTheme(true);
+  };
+  const openQuestionModal = () => {
+    dispatch(getThemes());
+
+    setOpenModalCreateQuestion(true);
+  };
+
+  // creation of new theme
+  const onChangeNewTheme = (e) => {
+    console.log(e.target.value);
+    console.log(e.target.name);
+    const { name, value } = e.target;
+    setNewTheme({ ...newTheme, [name]: value });
+
+    // forceRefresh(Math.random());
+    // setVisible(false);
+  };
+  // creation of new theme
+  const createNewTheme = () => {
+    dispatch(createTheme(newTheme));
+    dispatch(getThemes());
+    dispatch(getQuestions());
+    setOpenModalCreateTheme(false);
+    // forceRefresh(Math.random());
+    // setVisible(false);
+  };
+
+  const handleOnchangeSelectNewTheme = (value) => {
+    if (parseInt(value) !== 0) {
+      let option = themeOptions.find((item) => item.value === value);
+      console.log("option.label ", option.label);
+      setNewQuestion({
+        ...newQuestion,
+        theme_id: value,
+        theme_designation: option.label,
+      });
+    }
+  };
+
+  // creation of new question
+  const onchangeNewQuestion = (e) => {
+    console.log(e.target.value);
+    console.log(e.target.name);
+    const { name, value } = e.target;
+    setNewQuestion({ ...newQuestion, question_designation: value });
+  };
+
+  const createNewQuestion = () => {
+    dispatch(createQuestion(newQuestion));
+    dispatch(getThemes());
+    dispatch(getQuestions());
+    setOpenModalCreateQuestion(false);
+    //forceRefresh(Math.random());
+    // setVisible(false);
+  };
   return (
     <>
       <Modal
         title="Ajouter nouveau theme"
         centered
         open={openModalCreateTheme}
-        onOk={() => setOpenModalCreateTheme(false)}
+        onOk={createNewTheme}
         onCancel={() => setOpenModalCreateTheme(false)}
         width={700}
       >
-        <Row gutter={16}>
-          <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={24}>
-            <Form.Item name="designation" label="Désignation" className="mt-3">
-              <Input placeholder="Intitulé du theme" />
+        <Row gutter={8} className="mt-6">
+          <Col xs={4}>
+            <Form.Item label="Intitulé"></Form.Item>
+          </Col>
+          <Col xs={20}>
+            <Form.Item>
+              <Input
+                name="designation"
+                placeholder="Intitulé du theme"
+                value={newTheme.designation}
+                onChange={onChangeNewTheme}
+              />
             </Form.Item>
           </Col>
-          <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={24}>
-            <Form.Item name="descriptif" label="Descriptif">
-              <Input placeholder="Décrire le théme" />
+          <Col xs={4}>
+            <Form.Item label="Descriptif"></Form.Item>
+          </Col>
+          <Col xs={20}>
+            <Form.Item>
+              <Input
+                name="descriptif"
+                placeholder="Décrire le théme"
+                value={newTheme.descriptif}
+                onChange={onChangeNewTheme}
+              />
             </Form.Item>
           </Col>
         </Row>
@@ -489,31 +591,34 @@ const CreateNewEvaluation: React.FC<{
         title="Ajouter nouvelle question"
         centered
         open={openModalCreateQuestion}
-        onOk={() => setOpenModalCreateQuestion(false)}
+        onOk={createNewQuestion}
         onCancel={() => setOpenModalCreateQuestion(false)}
         width={700}
       >
-        <Row gutter={16}>
+        <Row gutter={16} className="mt-6">
           <Col xs={4}>
-            <Form.Item label="Theme"></Form.Item>
+            <Form.Item label="Théme"></Form.Item>
           </Col>
           <Col xs={20}>
             <Form.Item>
               <Select
-                value={"dataQuestion.theme_designation"}
+                value={newQuestion.theme_designation}
+                onChange={handleOnchangeSelectNewTheme}
                 style={{ width: 320 }}
+                options={themeOptions}
               />
             </Form.Item>
           </Col>
           <Col xs={4}>
-            <Form.Item label="Designation"></Form.Item>
+            <Form.Item label="Désignation"></Form.Item>
           </Col>
           <Col xs={20}>
             <Form.Item>
               <TextArea
                 rows={4}
                 name="question_designation"
-                value={"dataQuestion.question_designation"}
+                value={newQuestion.question_designation}
+                onChange={onchangeNewQuestion}
                 required
               />
             </Form.Item>
@@ -604,6 +709,23 @@ const CreateNewEvaluation: React.FC<{
                   </Form.Item>
                 </Col>
                 <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={24}>
+                  <div className="bg-transparent flex px-3 py-3 justify-end">
+                    <div className="bg-transparent">
+                      {" "}
+                      <Button
+                        onClick={openThemeModal}
+                        className="bg-blue-700 text-white hover:bg-blue-600"
+                      >
+                        Création thème
+                      </Button>{" "}
+                      <Button
+                        onClick={openQuestionModal}
+                        className="bg-blue-600 text-white hover:bg-blue-500"
+                      >
+                        Création question
+                      </Button>{" "}
+                    </div>
+                  </div>
                   <Collapse
                     collapsible="icon"
                     defaultActiveKey={["1"]}
@@ -715,33 +837,6 @@ const CreateNewEvaluation: React.FC<{
                             ) : (
                               ""
                             )}
-
-                            {/*                             <span
-                              onClick={() => setOpenModalCreateTheme(true)}
-                              className="ml-3 mt-1 text-blue-600 inline-block cursor-pointer shadow-sm hover:text-blue-500 "
-                            >
-                              <Tooltip
-                                placement="top"
-                                title={"Ajouter nouveau theme"}
-                              >
-                                <svg
-                                  xmlns="http://www.w3.org/2000/svg"
-                                  fill="none"
-                                  viewBox="0 0 24 24"
-                                  strokeWidth="1.5"
-                                  stroke="currentColor"
-                                  className="w-7 h-7 "
-                                  data-themeid={th.id}
-                                  data-themeindex={ith}
-                                >
-                                  <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"
-                                  />
-                                </svg>
-                              </Tooltip>
-                            </span> */}
                           </Space>
                         }
                         key={ith + 1}
@@ -851,38 +946,6 @@ const CreateNewEvaluation: React.FC<{
                             ) : (
                               ""
                             )}
-
-                            {/*                             <span
-                              onClick={() => setOpenModalCreateQuestion(true)}
-                              className=" mt-1 text-blue-600 inline-block cursor-pointer shadow-sm hover:text-blue-500 "
-                              style={{
-                                fontSize: "0.9rem",
-                                marginLeft: iq + 1 > 1 ? "5px" : "3px",
-                              }}
-                            >
-                              <Tooltip
-                                placement="top"
-                                title={"Ajouter nouvelle question"}
-                              >
-                                <svg
-                                  xmlns="http://www.w3.org/2000/svg"
-                                  fill="none"
-                                  viewBox="0 0 24 24"
-                                  strokeWidth="1.5"
-                                  stroke="currentColor"
-                                  className="w-7 h-7 "
-                                  data-themeid={q.theme_id}
-                                  data-questionindex={iq}
-                                  data-questionid={q.id}
-                                >
-                                  <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"
-                                  />
-                                </svg>
-                              </Tooltip>
-                            </span> */}
                           </Space>
                         ))}
                       </Panel>

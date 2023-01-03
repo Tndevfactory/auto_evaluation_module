@@ -138,11 +138,11 @@ const initialState = {
   errorDeleteEvaluation: null,
 } as IUserEvaluation;
 
-export const getEvaluations: any = createAsyncThunk(
-  "evaluation/getEvaluations",
-  async (id, thunkAPI) => {
+export const getUserInterfaceEvaluations: any = createAsyncThunk(
+  "evaluation/getAllUserInterfaceEvaluationByAnne",
+  async (annee, thunkAPI) => {
     try {
-      const resp = await api.get("/evaluations");
+      const resp = await api.get(`/get-user-interface-evaluations`);
       return resp.data;
     } catch (error) {
       return thunkAPI.rejectWithValue("something went wrong");
@@ -213,11 +213,11 @@ export const updateEvaluation: any = createAsyncThunk(
   }
 );
 
-export const deleteEvaluation: any = createAsyncThunk(
-  "evaluation/deleteEvaluation",
+export const deleteUserEvaluation: any = createAsyncThunk(
+  "evaluation/deleteUserEvaluation",
   async (id, thunkAPI) => {
     try {
-      const resp = await api.delete(`/delete-evaluation/${id}`);
+      const resp = await api.delete(`/delete-user-evaluation/${id}`);
       return resp.data;
     } catch (error) {
       return thunkAPI.rejectWithValue("something went wrong");
@@ -398,14 +398,14 @@ const userEvaluationContractSlice = createSlice({
     });
 
     //deleteTheme
-    builder.addCase(deleteEvaluation.pending, (state, action) => {
+    builder.addCase(deleteUserEvaluation.pending, (state, action) => {
       state.loadingDeleteEvaluation.isPending = true;
       state.loadingDeleteEvaluation.isSuccess = false;
       state.loadingDeleteEvaluation.isPending = false;
       state.errorDeleteEvaluation = null;
       state.messageDeleteEvaluation = "";
     });
-    builder.addCase(deleteEvaluation.fulfilled, (state, action) => {
+    builder.addCase(deleteUserEvaluation.fulfilled, (state, action) => {
       // Add item to the cartItem array
       state.messageDeleteEvaluation = action.payload;
       state.loadingDeleteEvaluation.isSuccess = true;
@@ -413,7 +413,7 @@ const userEvaluationContractSlice = createSlice({
       state.loadingDeleteEvaluation.isIdle = false;
       state.errorDeleteEvaluation = null;
     });
-    builder.addCase(deleteEvaluation.rejected, (state, action) => {
+    builder.addCase(deleteUserEvaluation.rejected, (state, action) => {
       state.loadingDeleteEvaluation.isIdle = true;
       state.loadingDeleteEvaluation.isSuccess = false;
       state.loadingDeleteEvaluation.isPending = false;

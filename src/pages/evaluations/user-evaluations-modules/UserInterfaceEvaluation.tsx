@@ -38,6 +38,7 @@ import {
   IUserEvaluation,
   getUserInterfaceEvaluationById,
   getAllUserInterfaceEvaluationByAnnee,
+  deleteUserEvaluation,
 } from "@/features/evaluations/userEvaluations/userEvaluationContractSlice";
 
 const { Title } = Typography;
@@ -173,20 +174,20 @@ function UserInterfaceEvaluations() {
                 <EditOutlined />
               </Tooltip>
             </a> */}
-            {/*   <Divider type="vertical" />
+            <Divider type="vertical" />
             <a>
               <Popconfirm
-                title="voulez-vous vraiment supprimer cette evaluation ?"
-                  onConfirm={() => {
-                  dispatch(deleteEvaluation(id));
-                  dispatch(getEvaluations());
-                }} 
+                title="voulez-vous vraiment supprimer cette user-evaluation ?"
+                onConfirm={() => {
+                  dispatch(deleteUserEvaluation(id));
+                  dispatch(getAllUserInterfaceEvaluationByAnnee("2022"));
+                }}
                 okText="Oui"
                 cancelText="Non"
               >
                 <DeleteOutlined />
               </Popconfirm>
-            </a> */}
+            </a>
             {/*   <Divider type="vertical" />
             <a
               onClick={() => {
