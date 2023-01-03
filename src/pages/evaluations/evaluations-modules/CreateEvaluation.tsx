@@ -749,7 +749,7 @@ const CreateNewEvaluation: React.FC<{
                         className="bg-gray-200 shadow"
                       >
                         {th.questions.map((q, iq, arr) => (
-                          <Space className=" mb-1 bg-transparent">
+                          <Space className=" mb-1 bg-transparent w-full ">
                             <Title
                               level={5}
                               style={{
@@ -818,6 +818,7 @@ const CreateNewEvaluation: React.FC<{
                                 </svg>
                               </Tooltip>
                             </span>
+
                             {iq + 1 > 1 ? (
                               <span
                                 onClick={(e) => handleRemoveQuestionBlock(e)}
@@ -850,6 +851,7 @@ const CreateNewEvaluation: React.FC<{
                             ) : (
                               ""
                             )}
+
                             {/*                             <span
                               onClick={() => setOpenModalCreateQuestion(true)}
                               className=" mt-1 text-blue-600 inline-block cursor-pointer shadow-sm hover:text-blue-500 "
