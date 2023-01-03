@@ -179,7 +179,9 @@ const EvaluationDetails: React.FC<{
     let themesArrayCopy = [...dataEvaluation.themes];
     console.log("themesArrayCopy ", themesArrayCopy);
     //find theme index inside copy
-    let themeindex = themesArrayCopy.findIndex((item) => item.id === themeid);
+    let themeindex = themesArrayCopy.findIndex(
+      (item) => parseInt(item.id) === parseInt(themeid)
+    );
     console.log("themeindex ", themeindex);
     // copy the theme in themeObjectCopy
     let themeObjectCopy = { ...themesArrayCopy[themeindex] };
@@ -336,24 +338,28 @@ const EvaluationDetails: React.FC<{
 
   const handleOnchangeSelectQuestion = (e) => {
     // init
-    let questionId = e.currentTarget.value;
+    let questionId = e.target.value;
     console.log("questionId ", questionId);
 
-    let themeId = e.currentTarget.dataset.theme_id;
+    let themeId = e.target.dataset.themeid;
     console.log("themeId ", themeId);
 
-    let questionIndex = e.currentTarget.dataset.question_index;
+    let questionIndex = e.target.dataset.questionindex;
     console.log("questionIndex ", questionIndex);
 
     console.log("dataEvaluation themes ", dataEvaluation.themes);
 
     let allThemes = [...dataEvaluation.themes];
+    console.log("allThemes", allThemes);
 
-    let theme = dataEvaluation.themes.find(
+    let theme = allThemes.find(
       (item) => parseInt(item.id) === parseInt(themeId)
     );
 
-    let themeIndex = theme.theme_index - 1;
+    console.log("theme", theme);
+    let themeIndex = allThemes.indexOf(theme);
+    console.log("themeIndex ", themeIndex);
+    //let themeIndex = theme.theme_index;
 
     //
     console.log("themeIndex", themeIndex);
@@ -649,9 +655,10 @@ const EvaluationDetails: React.FC<{
                                 {iq + 1}
                               </span>{" "}
                               <span>{q.question_designation}</span>
-                              {/* <span>
-                                {JSON.stringify(arr)}---
-                                {arr[iq].theme_index}
+                              {/*  <span>
+                                {`
+                                  themeid ${q.theme_id} questionindex  ${iq} questionid ${q.id}
+                                  `}
                               </span> */}
                             </Title>
 
